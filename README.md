@@ -1,4 +1,4 @@
-# 风禾千寻 · electron-app
+# 风禾千寻electron-app
 
 > 全场景绿植搭配与园林空间设计应用（桌面端 Demo）
 
