@@ -149,7 +149,12 @@
           <el-divider>其他登录方式</el-divider>
           <div class="login-oauth">
             <!--微信按钮-->
-            <el-button type="success" circle size="large">
+            <el-button
+              type="success"
+              circle
+              size="large"
+              @click="loginByWechat"
+            >
               <el-icon size="large">
                 <ChatDotRound />
               </el-icon>
@@ -166,33 +171,6 @@ import { reactive, ref } from "vue";
 import { ElMessage, type FormInstance, type FormRules } from "element-plus";
 import { loginCaptcha, loginByMobile, captchaImage } from "@api/login";
 import { Encrypt } from "@utils/aes";
-
-let isKeyDown = ref(false);
-let dinatesX = ref(0);
-let dinatesY = ref(0);
-
-// 最外层添加点击事件
-const mousedown = ( event )=>{
-    isKeyDown.value = true;
-    dinatesX.value = event.x;
-    dinatesY.value = event.y;
-
-    document.onmousemove = (ev) => {
-        if(isKeyDown.value ){
-            const x = ev.screenX - dinatesX.value;
-            const y = ev.screenY - dinatesY.value;
-            //给主进程传入坐标
-            let data = {
-                appX:x,
-                appY:y
-            }
-            electron.ipcRenderer.invoke('custom-adsorption',data);
-        }
-    };
-    document.onmouseup = () => {
-        isKeyDown.value = false
-    };
-}
 
 const ruleFormRef = ref<FormInstance>();
 const ruleForm = reactive({
@@ -282,12 +260,42 @@ let getImage = async () => {
   let imgUrl = URL.createObjectURL(blob);
   captchaUrl.value = imgUrl;
 };
+let isKeyDown = ref(false);
+let dinatesX = ref(0);
+let dinatesY = ref(0);
+
+// 最外层添加点击事件
+const mousedown = (event) => {
+  isKeyDown.value = true;
+  dinatesX.value = event.x;
+  dinatesY.value = event.y;
+
+  document.onmousemove = (ev) => {
+    if (isKeyDown.value) {
+      const x = ev.screenX - dinatesX.value;
+      const y = ev.screenY - dinatesY.value;
+      //给主进程传入坐标
+      let data = {
+        appX: x,
+        appY: y,
+      };
+      electron.ipcRenderer.invoke("custom-adsorption", data);
+    }
+  };
+  document.onmouseup = () => {
+    isKeyDown.value = false;
+  };
+};
+//微信登录
+const loginByWechat = async () => {
+  electron.ipcRenderer.invoke("loginByWechat");
+};
 </script>
 
 <style scoped>
 /* 设置可拖动 */
 .login {
-  -webkit-app-region: drag;
+  /* -webkit-app-region: drag; */
 }
 .boxCode {
   display: flex;

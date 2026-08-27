@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain } from "electron";
+import { app, shell, BrowserWindow, ipcMain, screen } from "electron";
 import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
@@ -8,14 +8,16 @@ function createWindow(): void {
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
+    // minWidth: 900,
+    // minHeight: 670,
+    // maxWidth: 900,
+    // maxHeight: 670,
     show: false, //
     autoHideMenuBar: true, // 自动隐藏菜单栏
-    titleBarStyle: "hidden", // 隐藏标题栏
-    // titleBarOverlay: {
-    //   color: '#ffffff',
-    //   symbolColor: '#74b1be'
-    // },
+    // titleBarStyle: "hidden", // 隐藏标题栏
     frame: false, //无边框窗口
+    resizable: true, // 窗口不可调整大小
+    // transparent: true,
     ...(process.platform === "linux" ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
@@ -28,11 +30,111 @@ function createWindow(): void {
   });
 
   // 窗口拖拽
-  ipcMain.handle('custom-adsorption',(_,res) => {
-      let x = res.appX;
-      let y = res.appY;
-      mainWindow.setPosition( x , y )
-  })
+  ipcMain.handle("custom-adsorption", (_, res) => {
+    let x = res.appX;
+    let y = res.appY;
+    let width = mainWindow.getBounds().width;
+    let height = mainWindow.getBounds().height;
+    mainWindow.setPosition(x, y);
+    mainWindow.setBounds({
+      width,
+      height,
+    });
+  });
+  // 子窗口对象
+  const context = {
+    allowQuitting: false, // 是否退出应用
+    isShow: false, //显示隐藏窗口
+    childWindow: null, //创建窗口的对象
+  };
+  // 创建子窗口
+  const createChildWindow = () => {
+    // 用局部变量持有窗口引用，避免闭包内 context.childWindow 被判定可能为 null
+    const childWindow = new BrowserWindow({
+      width: 400,
+      height: 400,
+      parent: mainWindow, // 子窗口父窗口
+      show: false, // 子窗口不显示
+      autoHideMenuBar: true, // 自动隐藏菜单栏
+      frame: false, // 无边框窗口
+      resizable: true, // 窗口不可调整大小
+      ...(process.platform === "linux" ? { icon } : {}),
+      webPreferences: {
+        preload: join(__dirname, "../preload/index.js"),
+        sandbox: false,
+      },
+    });
+    context.childWindow = childWindow;
+    // 子窗口显示
+    childWindow.on("ready-to-show", () => {
+      childWindow.show();
+    });
+    // 子窗口关闭
+    childWindow.on("close", (e) => {
+      // 应用未退出时，阻止默认关闭行为，改为隐藏窗口（保留实例以便复用）
+      if (context.allowQuitting == false) {
+        e.preventDefault();
+        hideWindow();
+      }
+    });
+    // 子窗口真正销毁后清理引用，避免下次打开时引用已销毁的窗口
+    childWindow.on("closed", () => {
+      context.childWindow = null;
+      context.isShow = false;
+    });
+
+    if (is.dev && process.env["ELECTRON_RENDERER_URL"]) {
+      childWindow.loadURL(
+        process.env["ELECTRON_RENDERER_URL"] + "#/login/wechat",
+      );
+    } else {
+      // 生产环境 loadFile 需通过 hash 指定子窗口路由，否则会落到默认路由 /
+      childWindow.loadFile(join(__dirname, "../renderer/index.html"), {
+        hash: "/login/wechat",
+      });
+    }
+  };
+  // 显示窗口
+  const showWindow = () => {
+    if (context.childWindow && !context.childWindow.isDestroyed()) {
+      context.childWindow.show();
+      context.isShow = true;
+    }
+  };
+
+  // 隐藏窗口
+  const hideWindow = () => {
+    if (context.childWindow && !context.childWindow.isDestroyed()) {
+      context.childWindow.hide();
+      context.isShow = false;
+    }
+  };
+  // 打开微信登录弹窗
+  ipcMain.handle("loginByWechat", () => {
+    if (context.childWindow == null) {
+      createChildWindow();
+    } else {
+      if (context.isShow) {
+        hideWindow();
+      } else {
+        showWindow();
+      }
+    }
+  });
+
+  // 子窗口拖拽：必须无条件注册，否则 createWindow 时 childWindow 为 null 导致 handler 永不生效
+  ipcMain.handle("custom-wx", (_event, res) => {
+    if (!context.childWindow || context.childWindow.isDestroyed()) return;
+    let x = res.appX;
+    let y = res.appY;
+    let width = context.childWindow.getBounds().width;
+    let height = context.childWindow.getBounds().height;
+    context.childWindow.setPosition(x, y);
+    context.childWindow.setBounds({
+      width,
+      height,
+    });
+  });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);

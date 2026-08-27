@@ -7,18 +7,20 @@ function createWindow() {
   const mainWindow = new electron.BrowserWindow({
     width: 900,
     height: 670,
+    // minWidth: 900,
+    // minHeight: 670,
+    // maxWidth: 900,
+    // maxHeight: 670,
     show: false,
     //
     autoHideMenuBar: true,
     // 自动隐藏菜单栏
-    titleBarStyle: "hidden",
-    // 隐藏标题栏
-    // titleBarOverlay: {
-    //   color: '#ffffff',
-    //   symbolColor: '#74b1be'
-    // },
+    // titleBarStyle: "hidden", // 隐藏标题栏
     frame: false,
     //无边框窗口
+    resizable: true,
+    // 窗口不可调整大小
+    // transparent: true,
     ...process.platform === "linux" ? { icon } : {},
     webPreferences: {
       preload: path.join(__dirname, "../preload/index.js"),
@@ -31,7 +33,101 @@ function createWindow() {
   electron.ipcMain.handle("custom-adsorption", (_, res) => {
     let x = res.appX;
     let y = res.appY;
+    let width = mainWindow.getBounds().width;
+    let height = mainWindow.getBounds().height;
     mainWindow.setPosition(x, y);
+    mainWindow.setBounds({
+      width,
+      height
+    });
+  });
+  const context = {
+    allowQuitting: false,
+    // 是否退出应用
+    isShow: false,
+    //显示隐藏窗口
+    childWindow: null
+    //创建窗口的对象
+  };
+  const createChildWindow = () => {
+    const childWindow = new electron.BrowserWindow({
+      width: 400,
+      height: 400,
+      parent: mainWindow,
+      // 子窗口父窗口
+      show: false,
+      // 子窗口不显示
+      autoHideMenuBar: true,
+      // 自动隐藏菜单栏
+      frame: false,
+      // 无边框窗口
+      resizable: true,
+      // 窗口不可调整大小
+      ...process.platform === "linux" ? { icon } : {},
+      webPreferences: {
+        preload: path.join(__dirname, "../preload/index.js"),
+        sandbox: false
+      }
+    });
+    context.childWindow = childWindow;
+    childWindow.on("ready-to-show", () => {
+      childWindow.show();
+    });
+    childWindow.on("close", (e) => {
+      {
+        e.preventDefault();
+        hideWindow();
+      }
+    });
+    childWindow.on("closed", () => {
+      context.childWindow = null;
+      context.isShow = false;
+    });
+    if (utils.is.dev && process.env["ELECTRON_RENDERER_URL"]) {
+      childWindow.loadURL(
+        process.env["ELECTRON_RENDERER_URL"] + "#/login/wechat"
+      );
+    } else {
+      childWindow.loadFile(path.join(__dirname, "../renderer/index.html"), {
+        hash: "/login/wechat"
+      });
+    }
+  };
+  const showWindow = () => {
+    if (context.childWindow && !context.childWindow.isDestroyed()) {
+      context.childWindow.show();
+      context.isShow = true;
+    }
+  };
+  const hideWindow = () => {
+    if (context.childWindow && !context.childWindow.isDestroyed()) {
+      context.childWindow.hide();
+      context.isShow = false;
+    }
+  };
+  electron.ipcMain.handle("loginByWechat", () => {
+    if (context.childWindow == null) {
+      createChildWindow();
+    } else {
+      if (context.isShow) {
+        hideWindow();
+      } else {
+        showWindow();
+      }
+    }
+  });
+  electron.ipcMain.handle("custom-wx", (_event, res) => {
+    if (!context.childWindow || context.childWindow.isDestroyed())
+      return;
+    let x = res.appX;
+    let y = res.appY;
+    let width = context.childWindow.getBounds().width;
+    let height = context.childWindow.getBounds().height;
+    context.childWindow.setPosition(x, y);
+    context.childWindow.setBounds({
+      width,
+      height
+    });
   });
   mainWindow.webContents.setWindowOpenHandler((details) => {
     electron.shell.openExternal(details.url);

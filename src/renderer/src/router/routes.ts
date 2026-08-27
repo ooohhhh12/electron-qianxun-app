@@ -14,4 +14,9 @@ export const AppRoutes = [
     name: "关于我们",
     component: () => import("@views/About.vue"),
   },
+  {
+    path: "/login/wechat",
+    name: "微信登录",
+    component: () => import("@views/login/wechat.vue"),
+  },
 ];
