@@ -19,19 +19,12 @@
     "build:mac": "npm run build && electron-builder --mac --config",
     "build:linux": "npm run build && electron-builder --linux --config"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "electron",
-      "esbuild",
-      "vue-demi"
-    ]
-  },
   "dependencies": {
     "@electron-toolkit/preload": "^2.0.0",
     "@electron-toolkit/utils": "^2.0.0",
     "@element-plus/icons-vue": "^2.3.2",
     "axios": "^1.6.2",
-    "crypto-js": "^4.2.0",
+    "crypto-js": "4.2.0",
     "element-plus": "^2.4.3",
     "pinia": "^2.1.7",
     "pinia-plugin-persist": "^1.0.0",

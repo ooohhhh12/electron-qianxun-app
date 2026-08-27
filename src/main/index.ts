@@ -8,9 +8,13 @@ function createWindow(): void {
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
-    show: false,
-    autoHideMenuBar: true,
+    show: false, //
+    autoHideMenuBar: true, // 自动隐藏菜单栏
     titleBarStyle: "hidden", // 隐藏标题栏
+    // titleBarOverlay: {
+    //   color: '#ffffff',
+    //   symbolColor: '#74b1be'
+    // },
     frame: false, //无边框窗口
     ...(process.platform === "linux" ? { icon } : {}),
     webPreferences: {
@@ -24,11 +28,11 @@ function createWindow(): void {
   });
 
   // 窗口拖拽
-  ipcMain.on("window-drag", (event, arg) => {
-    let x = arg.appX;
-    let y = arg.appY;
-    mainWindow.setPosition(x, y);
-  });
+  ipcMain.handle('custom-adsorption',(_,res) => {
+      let x = res.appX;
+      let y = res.appY;
+      mainWindow.setPosition( x , y )
+  })
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);

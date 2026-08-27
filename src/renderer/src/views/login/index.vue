@@ -1,9 +1,9 @@
 <template>
-  <div class="login" @click="mouseDown">
+  <div class="login" @mousedown="mousedown">
     <!--左侧-->
     <div class="login_adv">
       <div class="login_adv_title">
-        <h2>小鹿线</h2>
+        <h2>风禾千寻</h2>
         <h4>客户关系管理系统</h4>
         <p>让业务在线更高效，加速企业数字化升级。</p>
       </div>
@@ -172,28 +172,27 @@ let dinatesX = ref(0);
 let dinatesY = ref(0);
 
 // 最外层添加点击事件
-const mouseDown = (event) => {
-  isKeyDown.value = true;
-  dinatesX.value = event.x;
-  dinatesY.value = event.y;
+const mousedown = ( event )=>{
+    isKeyDown.value = true;
+    dinatesX.value = event.x;
+    dinatesY.value = event.y;
 
-  document.onmousemove = (ev) => {
-    if (isKeyDown.value) {
-      const x = ev.screenX - dinatesX.value;
-      const y = ev.screenY - dinatesY.value;
-      //给主进程传入坐标
-      let data = {
-        appX: x,
-        appY: y,
-      };
-      // 通知主进程信息
-      electron.ipcRenderer.invoke("custom-adsorption", data);
-    }
-  };
-  document.onmouseup = () => {
-    isKeyDown.value = false;
-  };
-};
+    document.onmousemove = (ev) => {
+        if(isKeyDown.value ){
+            const x = ev.screenX - dinatesX.value;
+            const y = ev.screenY - dinatesY.value;
+            //给主进程传入坐标
+            let data = {
+                appX:x,
+                appY:y
+            }
+            electron.ipcRenderer.invoke('custom-adsorption',data);
+        }
+    };
+    document.onmouseup = () => {
+        isKeyDown.value = false
+    };
+}
 
 const ruleFormRef = ref<FormInstance>();
 const ruleForm = reactive({
@@ -287,7 +286,7 @@ let getImage = async () => {
 
 <style scoped>
 /* 设置可拖动 */
-div {
+.login {
   -webkit-app-region: drag;
 }
 .boxCode {
@@ -308,9 +307,7 @@ div {
   align-items: center;
   margin-bottom: 10px;
 }
-</style>
 
-<style scoped>
 .login {
   width: 100vw;
   height: 100vh;

@@ -96,6 +96,10 @@ pnpm install
 pnpm run dev
 ```
 
+# 手动审批
+pnpm approve-builds
+
+
 启动后会打开 Electron 窗口，默认加载渲染进程开发地址，支持热更新。
 
 ### 构建与打包

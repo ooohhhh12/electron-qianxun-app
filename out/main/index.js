@@ -8,9 +8,15 @@ function createWindow() {
     width: 900,
     height: 670,
     show: false,
+    //
     autoHideMenuBar: true,
+    // 自动隐藏菜单栏
     titleBarStyle: "hidden",
     // 隐藏标题栏
+    // titleBarOverlay: {
+    //   color: '#ffffff',
+    //   symbolColor: '#74b1be'
+    // },
     frame: false,
     //无边框窗口
     ...process.platform === "linux" ? { icon } : {},
@@ -22,9 +28,9 @@ function createWindow() {
   mainWindow.on("ready-to-show", () => {
     mainWindow.show();
   });
-  electron.ipcMain.on("window-drag", (event, arg) => {
-    let x = arg.appX;
-    let y = arg.appY;
+  electron.ipcMain.handle("custom-adsorption", (_, res) => {
+    let x = res.appX;
+    let y = res.appY;
     mainWindow.setPosition(x, y);
   });
   mainWindow.webContents.setWindowOpenHandler((details) => {
