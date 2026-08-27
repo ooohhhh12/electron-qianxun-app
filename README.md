@@ -80,18 +80,20 @@ electron-app
 ### 环境要求
 
 - Node.js ≥ 18
-- npm（或 pnpm / yarn）
+- pnpm ≥ 9（本项目统一使用 pnpm 管理依赖）
 
 ### 安装依赖
 
 ```bash
-npm install
+pnpm install
 ```
+
+> 项目已配置国内镜像加速（`.npmrc`）：npm 包源、Electron 二进制、electron-builder 打包工具均自动走 npmmirror，安装和打包时无需再手动处理网络问题。
 
 ### 启动开发
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 启动后会打开 Electron 窗口，默认加载渲染进程开发地址，支持热更新。
@@ -100,12 +102,12 @@ npm run dev
 
 ```bash
 # 仅构建（会先执行类型检查）
-npm run build
+pnpm run build
 
 # 打包为各平台安装包
-npm run build:win      # Windows
-npm run build:mac      # macOS
-npm run build:linux    # Linux
+pnpm run build:win      # Windows
+pnpm run build:mac      # macOS
+pnpm run build:linux    # Linux
 ```
 
 ---
@@ -114,14 +116,14 @@ npm run build:linux    # Linux
 
 | 命令 | 说明 |
 | --- | --- |
-| `npm run dev` | 启动开发环境（electron-vite dev） |
-| `npm run start` | 预览构建产物（electron-vite preview） |
-| `npm run build` | 类型检查 + 构建（electron-vite build） |
-| `npm run typecheck` | 主进程 / 渲染进程类型检查 |
-| `npm run typecheck:node` | 仅检查主进程 / 预加载 |
-| `npm run typecheck:web` | 仅检查渲染进程（vue-tsc） |
-| `npm run lint` | ESLint 检查并自动修复 |
-| `npm run format` | Prettier 格式化全部文件 |
+| `pnpm run dev` | 启动开发环境（electron-vite dev） |
+| `pnpm run start` | 预览构建产物（electron-vite preview） |
+| `pnpm run build` | 类型检查 + 构建（electron-vite build） |
+| `pnpm run typecheck` | 主进程 / 渲染进程类型检查 |
+| `pnpm run typecheck:node` | 仅检查主进程 / 预加载 |
+| `pnpm run typecheck:web` | 仅检查渲染进程（vue-tsc） |
+| `pnpm run lint` | ESLint 检查并自动修复 |
+| `pnpm run format` | Prettier 格式化全部文件 |
 
 ---
 

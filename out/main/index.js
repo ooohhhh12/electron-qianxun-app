@@ -9,6 +9,10 @@ function createWindow() {
     height: 670,
     show: false,
     autoHideMenuBar: true,
+    titleBarStyle: "hidden",
+    // 隐藏标题栏
+    frame: false,
+    //无边框窗口
     ...process.platform === "linux" ? { icon } : {},
     webPreferences: {
       preload: path.join(__dirname, "../preload/index.js"),
@@ -17,6 +21,11 @@ function createWindow() {
   });
   mainWindow.on("ready-to-show", () => {
     mainWindow.show();
+  });
+  electron.ipcMain.on("window-drag", (event, arg) => {
+    let x = arg.appX;
+    let y = arg.appY;
+    mainWindow.setPosition(x, y);
   });
   mainWindow.webContents.setWindowOpenHandler((details) => {
     electron.shell.openExternal(details.url);
