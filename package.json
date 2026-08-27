@@ -50,5 +50,8 @@
     "vite": "^4.4.9",
     "vue": "^3.3.4",
     "vue-tsc": "^1.8.8"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["electron", "esbuild"]
   }
 }
