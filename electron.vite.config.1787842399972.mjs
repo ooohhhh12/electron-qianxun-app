@@ -1,22 +1,20 @@
+// electron.vite.config.ts
 import { resolve } from "path";
 import {
   defineConfig,
   externalizeDepsPlugin,
-  bytecodePlugin,
+  bytecodePlugin
 } from "electron-vite";
 import vue from "@vitejs/plugin-vue";
-
-//引入Element Plus
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
-
-export default defineConfig({
+var electron_vite_config_default = defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin(), bytecodePlugin()],
+    plugins: [externalizeDepsPlugin(), bytecodePlugin()]
   },
   preload: {
-    plugins: [externalizeDepsPlugin(), bytecodePlugin()],
+    plugins: [externalizeDepsPlugin(), bytecodePlugin()]
   },
   renderer: {
     resolve: {
@@ -27,26 +25,29 @@ export default defineConfig({
         "@router": resolve("src/renderer/src/router"),
         "@components": resolve("src/renderer/src/components"),
         "@utils": resolve("src/renderer/src/utils"),
-        "@api": resolve("src/renderer/src/api"),
-      },
+        "@api": resolve("src/renderer/src/api")
+      }
     },
     server: {
       proxy: {
         "/api": {
           target: "http://doc.xuexiluxian.cn/",
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ""),
-        },
-      },
+          rewrite: (path) => path.replace(/^\/api/, "")
+        }
+      }
     },
     plugins: [
       vue(),
       AutoImport({
-        resolvers: [ElementPlusResolver()],
+        resolvers: [ElementPlusResolver()]
       }),
       Components({
-        resolvers: [ElementPlusResolver()],
-      }),
-    ],
-  },
+        resolvers: [ElementPlusResolver()]
+      })
+    ]
+  }
 });
+export {
+  electron_vite_config_default as default
+};
