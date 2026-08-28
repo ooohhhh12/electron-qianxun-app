@@ -30,16 +30,8 @@ function createWindow() {
   mainWindow.on("ready-to-show", () => {
     mainWindow.show();
   });
-  electron.ipcMain.handle("custom-adsorption", (_, res) => {
-    let x = res.appX;
-    let y = res.appY;
-    let width = mainWindow.getBounds().width;
-    let height = mainWindow.getBounds().height;
-    mainWindow.setPosition(x, y);
-    mainWindow.setBounds({
-      width,
-      height
-    });
+  electron.ipcMain.handle("custom-adsorption", (event, data) => {
+    mainWindow.setPosition(data.appX, data.appY);
   });
   const context = {
     allowQuitting: false,
@@ -61,7 +53,7 @@ function createWindow() {
       // 自动隐藏菜单栏
       frame: false,
       // 无边框窗口
-      resizable: true,
+      resizable: false,
       // 窗口不可调整大小
       ...process.platform === "linux" ? { icon } : {},
       webPreferences: {
@@ -119,15 +111,8 @@ function createWindow() {
   electron.ipcMain.handle("custom-wx", (_event, res) => {
     if (!context.childWindow || context.childWindow.isDestroyed())
       return;
-    let x = res.appX;
-    let y = res.appY;
-    let width = context.childWindow.getBounds().width;
-    let height = context.childWindow.getBounds().height;
-    context.childWindow.setPosition(x, y);
-    context.childWindow.setBounds({
-      width,
-      height
-    });
+    const { width, height } = context.childWindow.getBounds();
+    context.childWindow.setBounds({ x: res.appX, y: res.appY, width, height });
   });
   mainWindow.webContents.setWindowOpenHandler((details) => {
     electron.shell.openExternal(details.url);

@@ -30,19 +30,17 @@ function createWindow(): void {
   });
 
   // 窗口拖拽
-  ipcMain.handle("custom-adsorption", (_, res) => {
-    let x = res.appX;
-    let y = res.appY;
-    let width = mainWindow.getBounds().width;
-    let height = mainWindow.getBounds().height;
-    mainWindow.setPosition(x, y);
-    mainWindow.setBounds({
-      width,
-      height,
-    });
+  ipcMain.handle("custom-adsorption", (event, data) => {
+    // 一次调用传全量 bounds，避免只传 width/height 在 125% 等缩放下被错误换算导致窗口变大
+    // mainWindow.setBounds({ x: res.appX, y: res.appY, width, height });
+      mainWindow.setPosition(data.appX, data.appY);
   });
   // 子窗口对象
-  const context = {
+  const context: {
+    allowQuitting: boolean;
+    isShow: boolean;
+    childWindow: BrowserWindow | null;
+  } = {
     allowQuitting: false, // 是否退出应用
     isShow: false, //显示隐藏窗口
     childWindow: null, //创建窗口的对象
@@ -57,7 +55,7 @@ function createWindow(): void {
       show: false, // 子窗口不显示
       autoHideMenuBar: true, // 自动隐藏菜单栏
       frame: false, // 无边框窗口
-      resizable: true, // 窗口不可调整大小
+      resizable: false, // 窗口不可调整大小
       ...(process.platform === "linux" ? { icon } : {}),
       webPreferences: {
         preload: join(__dirname, "../preload/index.js"),
@@ -125,15 +123,8 @@ function createWindow(): void {
   // 子窗口拖拽：必须无条件注册，否则 createWindow 时 childWindow 为 null 导致 handler 永不生效
   ipcMain.handle("custom-wx", (_event, res) => {
     if (!context.childWindow || context.childWindow.isDestroyed()) return;
-    let x = res.appX;
-    let y = res.appY;
-    let width = context.childWindow.getBounds().width;
-    let height = context.childWindow.getBounds().height;
-    context.childWindow.setPosition(x, y);
-    context.childWindow.setBounds({
-      width,
-      height,
-    });
+    const { width, height } = context.childWindow.getBounds();
+    context.childWindow.setBounds({ x: res.appX, y: res.appY, width, height });
   });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -149,6 +140,14 @@ function createWindow(): void {
     mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
   }
 }
+
+// // 1. 获取窗口所在显示器缩放因子
+// ipcMain.handle('get-display-scale', async (event) => {
+//   const win = BrowserWindow.fromWebContents(event.sender)
+//   if (!win) return 1
+//   const display = screen.getDisplayMatching(win.getBounds())
+//   return display.scaleFactor
+// })
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
