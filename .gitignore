@@ -1,15 +1,17 @@
-.DS_Store
+# 依赖
 node_modules/
+.pnpm/
+# 构建输出
 dist/
-npm-debug.log*
-# package-lock.json
-tests/**/coverage/
-
-# Editor directories and files
-.idea
-.vscode
-.cursor
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
+out/
+build/
+# electron缓存
+electron/
+# 日志
+*.log
+# IDE
+.vscode/
+.idea/
+# 系统文件
+.DS_Store
+Thumbs.db
