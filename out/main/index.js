@@ -76,9 +76,7 @@ function createWindow() {
       context.isShow = false;
     });
     if (utils.is.dev && process.env["ELECTRON_RENDERER_URL"]) {
-      childWindow.loadURL(
-        process.env["ELECTRON_RENDERER_URL"] + "#/login/wechat"
-      );
+      childWindow.loadURL(process.env["ELECTRON_RENDERER_URL"] + "#/login/wechat");
     } else {
       childWindow.loadFile(path.join(__dirname, "../renderer/index.html"), {
         hash: "/login/wechat"
@@ -117,6 +115,9 @@ function createWindow() {
   mainWindow.webContents.setWindowOpenHandler((details) => {
     electron.shell.openExternal(details.url);
     return { action: "deny" };
+  });
+  electron.ipcMain.handle("close-login", () => {
+    mainWindow.close();
   });
   if (utils.is.dev && process.env["ELECTRON_RENDERER_URL"]) {
     mainWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);

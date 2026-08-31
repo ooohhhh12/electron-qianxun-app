@@ -12,17 +12,17 @@
 
 ## 技术栈
 
-| 分类 | 技术 | 说明 |
-| --- | --- | --- |
-| 桌面框架 | Electron | 跨平台桌面应用 |
-| 前端框架 | Vue 3 | `<script setup>` 组合式 API |
-| 构建工具 | electron-vite / Vite | 主进程、预加载、渲染进程一体化构建 |
-| 语言 | TypeScript | 类型安全的开发体验 |
-| UI 组件库 | Element Plus | 按需自动引入 |
-| 状态管理 | Pinia | 含 `pinia-plugin-persist` 持久化 |
-| 路由 | Vue Router | Hash 模式 + 导航守卫 |
-| 网络请求 | Axios | 封装于 `utils/request.ts` |
-| 样式 | Less | 全局样式 + 组件作用域样式 |
+| 分类      | 技术                 | 说明                               |
+| --------- | -------------------- | ---------------------------------- |
+| 桌面框架  | Electron             | 跨平台桌面应用                     |
+| 前端框架  | Vue 3                | `<script setup>` 组合式 API        |
+| 构建工具  | electron-vite / Vite | 主进程、预加载、渲染进程一体化构建 |
+| 语言      | TypeScript           | 类型安全的开发体验                 |
+| UI 组件库 | Element Plus         | 按需自动引入                       |
+| 状态管理  | Pinia                | 含 `pinia-plugin-persist` 持久化   |
+| 路由      | Vue Router           | Hash 模式 + 导航守卫               |
+| 网络请求  | Axios                | 封装于 `utils/request.ts`          |
+| 样式      | SCSS                 | 全局样式 + 组件作用域样式          |
 
 ---
 
@@ -97,8 +97,8 @@ pnpm run dev
 ```
 
 # 手动审批
-pnpm approve-builds
 
+pnpm approve-builds
 
 启动后会打开 Electron 窗口，默认加载渲染进程开发地址，支持热更新。
 
@@ -118,16 +118,16 @@ pnpm run build:linux    # Linux
 
 ## 常用脚本
 
-| 命令 | 说明 |
-| --- | --- |
-| `pnpm run dev` | 启动开发环境（electron-vite dev） |
-| `pnpm run start` | 预览构建产物（electron-vite preview） |
-| `pnpm run build` | 类型检查 + 构建（electron-vite build） |
-| `pnpm run typecheck` | 主进程 / 渲染进程类型检查 |
-| `pnpm run typecheck:node` | 仅检查主进程 / 预加载 |
-| `pnpm run typecheck:web` | 仅检查渲染进程（vue-tsc） |
-| `pnpm run lint` | ESLint 检查并自动修复 |
-| `pnpm run format` | Prettier 格式化全部文件 |
+| 命令                      | 说明                                   |
+| ------------------------- | -------------------------------------- |
+| `pnpm run dev`            | 启动开发环境（electron-vite dev）      |
+| `pnpm run start`          | 预览构建产物（electron-vite preview）  |
+| `pnpm run build`          | 类型检查 + 构建（electron-vite build） |
+| `pnpm run typecheck`      | 主进程 / 渲染进程类型检查              |
+| `pnpm run typecheck:node` | 仅检查主进程 / 预加载                  |
+| `pnpm run typecheck:web`  | 仅检查渲染进程（vue-tsc）              |
+| `pnpm run lint`           | ESLint 检查并自动修复                  |
+| `pnpm run format`         | Prettier 格式化全部文件                |
 
 ---
 
@@ -135,21 +135,21 @@ pnpm run build:linux    # Linux
 
 在 `electron.vite.config.ts` 与 `tsconfig.web.json` 中已配置以下别名，渲染进程中可直接使用：
 
-| 别名 | 指向目录 |
-| --- | --- |
-| `@renderer` | `src/renderer/src` |
-| `@views` | `src/renderer/src/views` |
+| 别名          | 指向目录                      |
+| ------------- | ----------------------------- |
+| `@renderer`   | `src/renderer/src`            |
+| `@views`      | `src/renderer/src/views`      |
 | `@components` | `src/renderer/src/components` |
-| `@router` | `src/renderer/src/router` |
-| `@store` | `src/renderer/src/store` |
-| `@utils` | `src/renderer/src/utils` |
-| `@api` | `src/renderer/src/api` |
+| `@router`     | `src/renderer/src/router`     |
+| `@store`      | `src/renderer/src/store`      |
+| `@utils`      | `src/renderer/src/utils`      |
+| `@api`        | `src/renderer/src/api`        |
 
 示例：
 
 ```ts
-import { useUserStore } from '@store/useUserStore'
-import { loginByJson } from '@api/login'
+import { useUserStore } from "@store/useUserStore";
+import { loginByJson } from "@api/login";
 ```
 
 ---
