@@ -1,9 +1,5 @@
 import { resolve } from "path";
-import {
-  defineConfig,
-  externalizeDepsPlugin,
-  bytecodePlugin,
-} from "electron-vite";
+import { defineConfig, externalizeDepsPlugin, bytecodePlugin } from "electron-vite";
 import vue from "@vitejs/plugin-vue";
 
 //引入Element Plus
@@ -48,5 +44,15 @@ export default defineConfig({
         resolvers: [ElementPlusResolver()],
       }),
     ],
+    css: {
+      preprocessorOptions: {
+        scss: {
+          // 使用现代编译器
+          api: "modern-compiler",
+          // 屏蔽两个废弃警告：legacy‑js‑api + import
+          silenceDeprecations: ["legacy-js-api", "import"],
+        },
+      },
+    },
   },
 });

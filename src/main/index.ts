@@ -33,7 +33,7 @@ function createWindow(): void {
   ipcMain.handle("custom-adsorption", (event, data) => {
     // 一次调用传全量 bounds，避免只传 width/height 在 125% 等缩放下被错误换算导致窗口变大
     // mainWindow.setBounds({ x: res.appX, y: res.appY, width, height });
-      mainWindow.setPosition(data.appX, data.appY);
+    mainWindow.setPosition(data.appX, data.appY);
   });
   // 子窗口对象
   const context: {
@@ -82,9 +82,7 @@ function createWindow(): void {
     });
 
     if (is.dev && process.env["ELECTRON_RENDERER_URL"]) {
-      childWindow.loadURL(
-        process.env["ELECTRON_RENDERER_URL"] + "#/login/wechat",
-      );
+      childWindow.loadURL(process.env["ELECTRON_RENDERER_URL"] + "#/login/wechat");
     } else {
       // 生产环境 loadFile 需通过 hash 指定子窗口路由，否则会落到默认路由 /
       childWindow.loadFile(join(__dirname, "../renderer/index.html"), {
@@ -99,7 +97,6 @@ function createWindow(): void {
       context.isShow = true;
     }
   };
-
   // 隐藏窗口
   const hideWindow = () => {
     if (context.childWindow && !context.childWindow.isDestroyed()) {
@@ -119,7 +116,6 @@ function createWindow(): void {
       }
     }
   });
-
   // 子窗口拖拽：必须无条件注册，否则 createWindow 时 childWindow 为 null 导致 handler 永不生效
   ipcMain.handle("custom-wx", (_event, res) => {
     if (!context.childWindow || context.childWindow.isDestroyed()) return;
@@ -130,6 +126,15 @@ function createWindow(): void {
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);
     return { action: "deny" };
+  });
+
+  // 关闭软件
+  ipcMain.handle("close-login", () => {
+    // close 	方法用于关闭窗口，可以通过监听 close 事件来执行一些自定义操作，并有机会取消关闭操作。
+    // destroy 方法用于彻底销毁一个窗口，不会触发 close 事件，并立即释放与窗口相关的所有资源。
+    // app.quit() 方法用于退出整个 Electron 应用程序，可以通过监听 before-quit 事件来执行一些预处理操作。
+    // app.exit() 方法用于立即终止整个 Electron 应用程序的进程，不会触发任何事件。
+    mainWindow.close();
   });
 
   // HMR for renderer base on electron-vite cli.
