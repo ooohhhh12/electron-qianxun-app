@@ -172,9 +172,9 @@
 import { onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage, type FormInstance, type FormRules } from "element-plus";
-import { loginCaptcha, loginByMobile, loginByJson, captchaImage, getUserInfo, getRoutes } from "@api/login";
-import { Encrypt } from "@utils/aes";
 import i18n from "@renderer/locales";
+// 说明：当前为无后端的「模拟登录」模式，账号 admin / 密码 123456 即可登录。
+// 接入真实后端时，恢复 @api/login 与 @utils/aes 的引入，并替换 handleLogin 内的模拟逻辑。
 
 const router = useRouter();
 
@@ -208,7 +208,6 @@ const accountForm = reactive({
   username: "",
   password: "",
   captcha: "",
-  key: "",
 });
 
 const mobileForm = reactive({
@@ -226,17 +225,43 @@ const rules = reactive<FormRules>({
   captcha: [{ required: true, message: "请输入验证码", trigger: "blur" }],
 });
 
-/* ============================ 图形验证码 ============================ */
+/* ============================ 图形验证码（本地 canvas 生成，无需后端） ============================ */
 const captchaUrl = ref("");
-const getImage = async () => {
-  const key = new Date().getTime().toString();
-  accountForm.key = key;
-  const res = await captchaImage({ key });
-  const blob = new Blob([res], { type: "image/png" });
-  captchaUrl.value = URL.createObjectURL(blob);
+const captchaCode = ref("");
+
+const randomNum = (min: number, max: number) => Math.floor(Math.random() * (max - min) + min);
+
+const getImage = () => {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "";
+  for (let i = 0; i < 4; i++) code += chars[randomNum(0, chars.length)];
+  captchaCode.value = code;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 100;
+  canvas.height = 40;
+  const ctx = canvas.getContext("2d")!;
+  ctx.fillStyle = "#f2f3f5";
+  ctx.fillRect(0, 0, 100, 40);
+  // 干扰线
+  for (let i = 0; i < 4; i++) {
+    ctx.strokeStyle = `rgb(${randomNum(130, 200)},${randomNum(130, 200)},${randomNum(130, 200)})`;
+    ctx.beginPath();
+    ctx.moveTo(randomNum(0, 100), randomNum(0, 40));
+    ctx.lineTo(randomNum(0, 100), randomNum(0, 40));
+    ctx.stroke();
+  }
+  // 验证码字符
+  ctx.font = "bold 24px Arial";
+  ctx.textBaseline = "middle";
+  for (let i = 0; i < code.length; i++) {
+    ctx.fillStyle = `rgb(${randomNum(30, 120)},${randomNum(30, 120)},${randomNum(30, 120)})`;
+    ctx.fillText(code[i], 14 + i * 22, 22);
+  }
+  captchaUrl.value = canvas.toDataURL("image/png");
 };
 
-/* ============================ 短信验证码 ============================ */
+/* ============================ 短信验证码（模拟倒计时） ============================ */
 const time = ref(60);
 const disabled = ref(false);
 const isLogin = ref(false);
@@ -245,10 +270,7 @@ const getCode = async () => {
   const valid = await mobileFormRef.value?.validateField("mobile").catch(() => false);
   if (!valid) return ElMessage.error("请填写正确的手机号");
 
-  const res: any = await loginCaptcha({ mobile: Encrypt(mobileForm.mobile) });
-  if (res.code !== "200") return ElMessage.error(res.msg);
-
-  ElMessage.success("发送成功");
+  ElMessage.success("发送成功（模拟）");
   disabled.value = true;
   time.value = 60;
   const timer = setInterval(() => {
@@ -261,7 +283,7 @@ const getCode = async () => {
   }, 1000);
 };
 
-/* ============================ 登录 ============================ */
+/* ============================ 登录（模拟） ============================ */
 const handleLogin = async (formEl: FormInstance | undefined, type: "account" | "mobile") => {
   if (!formEl) return;
   await formEl.validate(async (valid) => {
@@ -269,40 +291,39 @@ const handleLogin = async (formEl: FormInstance | undefined, type: "account" | "
 
     isLogin.value = true;
     try {
-      // 1. 调用登录接口
-      let res: any;
+      // —— 账号登录：本地校验验证码与账号密码 ——
       if (type === "account") {
-        res = await loginByJson({
-          username: Encrypt(accountForm.username),
-          password: Encrypt(accountForm.password),
-          captcha: accountForm.captcha,
-          key: accountForm.key,
-        });
-      } else {
-        res = await loginByMobile({
-          mobile: Encrypt(mobileForm.mobile),
-          captcha: Encrypt(mobileForm.captcha),
-        });
+        if (accountForm.captcha.toUpperCase() !== captchaCode.value) {
+          getImage();
+          return ElMessage.error("验证码错误");
+        }
+        if (accountForm.username !== "admin" || accountForm.password !== "123456") {
+          getImage();
+          return ElMessage.error("用户名或密码错误（测试账号：admin / 123456）");
+        }
       }
-      if (res.code !== "200") return ElMessage.error(res.msg);
 
-      // 2. 存储 token
-      const token = res.data;
+      // 1. 模拟后端返回 token，存入本地
+      const token = "mock-token-" + Date.now();
       localStorage.setItem("token", token);
 
-      // 3. 获取用户信息（请求头自动携带 token）
-      const userRes: any = await getUserInfo();
-      if (userRes.code !== "200") return ElMessage.error(userRes.msg);
-      const userInfo = userRes.data;
+      // 2. 模拟用户信息接口返回（含角色权限编码）
+      const userInfo = {
+        id: 1,
+        username: "admin",
+        nickname: "管理员",
+        roles: [{ code: "admin", name: "超级管理员" }],
+      };
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
 
-      // 4. 根据角色权限编码获取路由菜单树
-      const roleCodes = userInfo.roles?.map((r: any) => r.code) || [];
-      const routeRes: any = await getRoutes({ roleCodes });
-      if (routeRes.code !== "200") return ElMessage.error(routeRes.msg);
-      localStorage.setItem("routes", JSON.stringify(routeRes.data));
+      // 3. 模拟根据角色权限编码返回的路由菜单权限树
+      const routes = [
+        { path: "/home", name: "首页" },
+        { path: "/about", name: "关于我们" },
+      ];
+      localStorage.setItem("routes", JSON.stringify(routes));
 
-      // 5. 跳转首页
+      // 4. 跳转首页
       ElMessage.success("登录成功");
       router.push("/home");
     } finally {
@@ -350,6 +371,7 @@ onMounted(() => {
 /* 设置可拖动 */
 div {
   /* -webkit-app-region: drag; */
+  user-select: none; /* 防止拖拽时误选中文本 */
 }
 .boxCode {
   display: flex;

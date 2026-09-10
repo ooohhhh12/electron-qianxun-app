@@ -3,15 +3,17 @@ import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
 
+// app.commandLine.appendSwitch("high-dpi-support", "true");
+// app.commandLine.appendSwitch("force-device-scale-factor", "1"); // 同步缩放比例
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
-    // minWidth: 900,
-    // minHeight: 670,
-    // maxWidth: 900,
-    // maxHeight: 670,
+    minWidth: 900,
+    minHeight: 670,
+    maxWidth: 900,
+    maxHeight: 670,
     show: false, //
     autoHideMenuBar: true, // 自动隐藏菜单栏
     // titleBarStyle: "hidden", // 隐藏标题栏
@@ -51,11 +53,15 @@ function createWindow(): void {
     const childWindow = new BrowserWindow({
       width: 400,
       height: 400,
+      minWidth: 400,
+      minHeight: 400,
+      maxWidth: 400,
+      maxHeight: 400,
       parent: mainWindow, // 子窗口父窗口
       show: false, // 子窗口不显示
       autoHideMenuBar: true, // 自动隐藏菜单栏
       frame: false, // 无边框窗口
-      resizable: false, // 窗口不可调整大小
+      resizable: true, // 窗口不可调整大小
       ...(process.platform === "linux" ? { icon } : {}),
       webPreferences: {
         preload: join(__dirname, "../preload/index.js"),

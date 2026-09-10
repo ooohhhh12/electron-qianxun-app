@@ -7,10 +7,10 @@ function createWindow() {
   const mainWindow = new electron.BrowserWindow({
     width: 900,
     height: 670,
-    // minWidth: 900,
-    // minHeight: 670,
-    // maxWidth: 900,
-    // maxHeight: 670,
+    minWidth: 900,
+    minHeight: 670,
+    maxWidth: 900,
+    maxHeight: 670,
     show: false,
     //
     autoHideMenuBar: true,
@@ -45,6 +45,10 @@ function createWindow() {
     const childWindow = new electron.BrowserWindow({
       width: 400,
       height: 400,
+      minWidth: 400,
+      minHeight: 400,
+      maxWidth: 400,
+      maxHeight: 400,
       parent: mainWindow,
       // 子窗口父窗口
       show: false,
@@ -53,7 +57,7 @@ function createWindow() {
       // 自动隐藏菜单栏
       frame: false,
       // 无边框窗口
-      resizable: false,
+      resizable: true,
       // 窗口不可调整大小
       ...process.platform === "linux" ? { icon } : {},
       webPreferences: {
