@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { QuestionFilled, Top, Bottom, Minus } from "@element-plus/icons-vue";
+import { QuestionFilled, Bottom, Minus } from "@element-plus/icons-vue";
 
 const activeTab = ref("pv");
 

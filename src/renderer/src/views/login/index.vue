@@ -264,7 +264,10 @@ const isLogin = ref(false);
 
 const getCode = async () => {
   const valid = await mobileFormRef.value?.validateField("mobile").catch(() => false);
-  if (!valid) return ElMessage.error("请填写正确的手机号");
+  if (!valid) {
+    ElMessage.error("请填写正确的手机号");
+    return;
+  }
 
   ElMessage.success("发送成功（模拟）");
   disabled.value = true;
@@ -284,34 +287,39 @@ const { loginAndEnter } = useAuth();
 
 const handleLogin = async (formEl: FormInstance | undefined, type: "account" | "mobile") => {
   if (!formEl) return;
-  await formEl.validate(async (valid) => {
-    if (!valid) return ElMessage.warning("请填写正确内容");
 
-    isLogin.value = true;
-    try {
-      // 账号登录：本地校验验证码与账号密码
-      if (type === "account") {
-        if (accountForm.username !== "admin" || accountForm.password !== "123456") {
-          getImage();
-          return ElMessage.error("用户名或密码错误（测试账号：admin / 123456）");
-        }
-      }
-
-      // 全流程编排：登录 → 存 token → 拉用户信息 → 拉菜单 → 跳转
-      await loginAndEnter({
-        username: type === "account" ? accountForm.username : undefined,
-        password: type === "account" ? accountForm.password : undefined,
-        mobile: type === "mobile" ? mobileForm.mobile : undefined,
-        captcha: type === "mobile" ? mobileForm.captcha : undefined,
-      });
-
-      ElMessage.success("登录成功");
-    } catch (e: any) {
-      ElMessage.error(e?.message || "登录失败");
-    } finally {
-      isLogin.value = false;
+  isLogin.value = true;
+  try {
+    // 1. 表单校验：Promise 风格（不传 callback，直接 await 返回 boolean）
+    const valid = await formEl.validate().catch(() => false);
+    if (!valid) {
+      ElMessage.warning("请填写正确内容");
+      return;
     }
-  });
+
+    // 2. 账号登录：本地校验验证码与账号密码
+    if (type === "account") {
+      if (accountForm.username !== "admin" || accountForm.password !== "123456") {
+        getImage();
+        ElMessage.error("用户名或密码错误（测试账号：admin / 123456）");
+        return;
+      }
+    }
+
+    // 3. 全流程编排：登录 → 存 token → 拉用户信息 → 拉菜单 → 跳转
+    await loginAndEnter({
+      username: type === "account" ? accountForm.username : undefined,
+      password: type === "account" ? accountForm.password : undefined,
+      mobile: type === "mobile" ? mobileForm.mobile : undefined,
+      captcha: type === "mobile" ? mobileForm.captcha : undefined,
+    });
+
+    ElMessage.success("登录成功");
+  } catch (e: any) {
+    ElMessage.error(e?.message || "登录失败");
+  } finally {
+    isLogin.value = false;
+  }
 };
 
 /* ============================ 窗口控制 ============================ */

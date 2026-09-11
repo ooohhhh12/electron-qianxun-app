@@ -1,5 +1,5 @@
 // 白名单（无需登录即可访问）
-const WHITE_LIST = ["/", "/home", "/about", "/scenes", "/login/wechat"];
+// const WHITE_LIST = ["/", "/home", "/about", "/scenes", "/login/wechat"];
 
 // 前置守卫：未登录不可进入后台
 export const beforeEach = (to: { path: string }) => {

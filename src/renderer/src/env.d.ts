@@ -6,3 +6,13 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>
   export default component
 }
+
+// 声明预加载脚本暴露的 electron 对象（通过 contextBridge.exposeInMainWorld）
+// 渲染层中可直接写 electron.ipcRenderer.invoke(...)，
+// 打包时 typecheck 就不会再报 "找不到名称 'electron'" 了
+declare const electron: {
+  ipcRenderer: import('electron').IpcRenderer
+  process: {
+    versions: Record<string, string>
+  }
+}

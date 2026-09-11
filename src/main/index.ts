@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain, screen } from "electron";
+import { app, shell, BrowserWindow, ipcMain } from "electron";
 import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
@@ -30,7 +30,7 @@ function createWindow(): void {
   });
 
   // 窗口拖拽
-  ipcMain.handle("custom-adsorption", (event, data) => {
+  ipcMain.handle("custom-adsorption", (_, data) => {
     // 一次调用传全量 bounds，避免只传 width/height 在 125% 等缩放下被错误换算导致窗口变大
     // mainWindow.setBounds({ x: res.appX, y: res.appY, width, height });
     mainWindow.setPosition(data.appX, data.appY);

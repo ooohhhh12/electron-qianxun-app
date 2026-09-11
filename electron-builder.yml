@@ -13,6 +13,10 @@ asarUnpack:
   - resources/**
 win:
   executableName: electron-app
+  # 跳过签名，避免 winCodeSign 在 Windows 上创建符号链接失败
+  # （发布正式版时购买代码签名证书，再把这两行删掉即可）
+  sign: null
+  verifyUpdateCodeSignature: false
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

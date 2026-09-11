@@ -101,13 +101,11 @@ const iconMap: Record<string, any> = {
 };
 const resolveIcon = (iconName: string) => iconMap[iconName] || DataAnalysis;
 
-// —— 面包屑：当前页面标题 & 父级菜单标题 ——
-const { currentTitle, parentTitle, openedMenus } = computed(() => {
-  const path = route.path;
+// —— 面包屑：根据当前路由在菜单树中查找父子关系 ——
+function findBreadcrumb(path: string) {
   let parent = "";
   let child = "";
   const opened: string[] = [];
-
   for (const top of menuTree.value) {
     if (top.path === path) {
       child = top.name;
@@ -123,8 +121,11 @@ const { currentTitle, parentTitle, openedMenus } = computed(() => {
       }
     }
   }
-  return { currentTitle: child, parentTitle: parent, openedMenus: opened };
-});
+  return { parent, child, opened };
+}
+const currentTitle = computed(() => findBreadcrumb(route.path).child);
+const parentTitle = computed(() => findBreadcrumb(route.path).parent);
+const openedMenus = computed(() => findBreadcrumb(route.path).opened);
 
 const handleCommand = async (cmd: string) => {
   if (cmd === "logout") {
