@@ -3,14 +3,13 @@ const electron = require("electron");
 const path = require("path");
 const utils = require("@electron-toolkit/utils");
 const icon = path.join(__dirname, "../../resources/icon.png");
+electron.app.commandLine.appendSwitch("force-device-scale-factor", "1");
 function createWindow() {
   const mainWindow = new electron.BrowserWindow({
     width: 900,
     height: 670,
     minWidth: 900,
     minHeight: 670,
-    maxWidth: 900,
-    maxHeight: 670,
     show: false,
     //
     autoHideMenuBar: true,
@@ -122,6 +121,31 @@ function createWindow() {
   });
   electron.ipcMain.handle("close-login", () => {
     mainWindow.close();
+  });
+  electron.ipcMain.handle("win-minimize", () => {
+    mainWindow.minimize();
+  });
+  electron.ipcMain.handle("win-toggle-max", () => {
+    if (mainWindow.isMaximized()) {
+      mainWindow.unmaximize();
+    } else {
+      mainWindow.maximize();
+    }
+    mainWindow.webContents.send("win-maximized", mainWindow.isMaximized());
+  });
+  electron.ipcMain.handle("win-close", () => {
+    mainWindow.close();
+  });
+  electron.ipcMain.handle("win-toggle-top", () => {
+    const current = mainWindow.isAlwaysOnTop();
+    mainWindow.setAlwaysOnTop(!current);
+    mainWindow.webContents.send("win-top-changed", !current);
+  });
+  mainWindow.on("maximize", () => {
+    mainWindow.webContents.send("win-maximized", true);
+  });
+  mainWindow.on("unmaximize", () => {
+    mainWindow.webContents.send("win-maximized", false);
   });
   if (utils.is.dev && process.env["ELECTRON_RENDERER_URL"]) {
     mainWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);

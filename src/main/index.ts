@@ -4,7 +4,7 @@ import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
 
 // app.commandLine.appendSwitch("high-dpi-support", "true");
-// app.commandLine.appendSwitch("force-device-scale-factor", "1"); // 同步缩放比例
+app.commandLine.appendSwitch("force-device-scale-factor", "1"); // 同步缩放比例
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -12,8 +12,6 @@ function createWindow(): void {
     height: 670,
     minWidth: 900,
     minHeight: 670,
-    maxWidth: 900,
-    maxHeight: 670,
     show: false, //
     autoHideMenuBar: true, // 自动隐藏菜单栏
     // titleBarStyle: "hidden", // 隐藏标题栏
@@ -141,6 +139,35 @@ function createWindow(): void {
     // app.quit() 方法用于退出整个 Electron 应用程序，可以通过监听 before-quit 事件来执行一些预处理操作。
     // app.exit() 方法用于立即终止整个 Electron 应用程序的进程，不会触发任何事件。
     mainWindow.close();
+  });
+
+  // —— 主窗口控制（Home / Main 后台）——
+  ipcMain.handle("win-minimize", () => {
+    mainWindow.minimize();
+  });
+  ipcMain.handle("win-toggle-max", () => {
+    if (mainWindow.isMaximized()) {
+      mainWindow.unmaximize();
+    } else {
+      mainWindow.maximize();
+    }
+    // 把当前最大化状态通知渲染层，用于切换按钮图标
+    mainWindow.webContents.send("win-maximized", mainWindow.isMaximized());
+  });
+  ipcMain.handle("win-close", () => {
+    mainWindow.close();
+  });
+  ipcMain.handle("win-toggle-top", () => {
+    const current = mainWindow.isAlwaysOnTop();
+    mainWindow.setAlwaysOnTop(!current);
+    mainWindow.webContents.send("win-top-changed", !current);
+  });
+  // 同步初始最大化状态
+  mainWindow.on("maximize", () => {
+    mainWindow.webContents.send("win-maximized", true);
+  });
+  mainWindow.on("unmaximize", () => {
+    mainWindow.webContents.send("win-maximized", false);
   });
 
   // HMR for renderer base on electron-vite cli.

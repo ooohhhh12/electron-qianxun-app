@@ -5,7 +5,14 @@
       <div class="nav-inner">
         <div class="brand">
           <span class="brand-mark">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <path d="M20 4c-8 0-14 3-14 9 0 4 3 7 7 7 6 0 7-5 7-16z" />
               <path d="M4 21c3-5 8-8 13-10" />
             </svg>
@@ -13,11 +20,15 @@
           <span class="brand-name">风禾千寻</span>
         </div>
         <nav class="nav-links">
-          <a href="#features">核心功能</a>
-          <a href="#scenes">空间场景</a>
-          <a href="#" @click.prevent="goDetail()">关于我们</a>
+          <router-link to="/main/dashboard">核心功能</router-link>
+          <router-link to="/scenes">空间场景</router-link>
+          <router-link to="/about">关于我们</router-link>
         </nav>
         <button class="btn-primary nav-cta" @click="goDetail()">立即体验</button>
+      </div>
+      <!-- 窗口控制按钮固定在窗口最右侧 -->
+      <div class="nav-win-controls">
+        <WindowControls />
       </div>
     </header>
 
@@ -26,12 +37,8 @@
       <div class="hero-bg" aria-hidden="true"></div>
       <div class="hero-inner">
         <div class="hero-copy">
-          <span class="hero-badge">
-            <i></i> 全场景绿植搭配 · 园林空间设计
-          </span>
-          <h1 class="hero-title">
-            每个空间，<br />皆有<span>风禾绿意</span>
-          </h1>
+          <span class="hero-badge"> <i></i> 全场景绿植搭配 · 园林空间设计 </span>
+          <h1 class="hero-title">每个空间，<br />皆有<span>风禾绿意</span></h1>
           <p class="hero-sub">
             风禾千寻，一站式覆盖家庭、室内、商业全空间绿植设计需求。从方案灵感到 AI
             智能设计，从植物识别到养护管理，让每一寸空间都生机盎然。
@@ -63,8 +70,14 @@
               <svg viewBox="0 0 200 200" fill="none" aria-hidden="true">
                 <path class="pot" d="M70 148h60l-6 34H76l-6-34z" />
                 <path class="stem" d="M100 148c0-28 0-52 0-60" stroke-linecap="round" stroke-width="5" />
-                <path class="leaf l3" d="M100 96C82 96 70 84 70 68c0-16 13-28 30-28 18 0 30 13 30 30 0 14-12 26-30 26z" />
-                <path class="leaf l4" d="M100 118c-14 0-24-10-24-23 0-12 10-21 24-21 13 0 23 9 23 21 0 13-10 23-23 23z" />
+                <path
+                  class="leaf l3"
+                  d="M100 96C82 96 70 84 70 68c0-16 13-28 30-28 18 0 30 13 30 30 0 14-12 26-30 26z"
+                />
+                <path
+                  class="leaf l4"
+                  d="M100 118c-14 0-24-10-24-23 0-12 10-21 24-21 13 0 23 9 23 21 0 13-10 23-23 23z"
+                />
                 <path class="leaf l5" d="M100 78c10-14 26-20 40-16" stroke-linecap="round" stroke-width="4" />
               </svg>
             </div>
@@ -105,18 +118,20 @@
         <p class="section-desc">点击任意功能卡片，查看详细能力介绍</p>
       </div>
       <div class="feature-grid">
-        <article
-          v-for="f in features"
-          :key="f.id"
-          class="feature-card"
-          @click="goDetail(f.id)"
-        >
+        <article v-for="f in features" :key="f.id" class="feature-card" @click="goDetail(f.id)">
           <div class="feature-icon" v-html="f.icon"></div>
           <h3 class="feature-title">{{ f.title }}</h3>
           <p class="feature-desc">{{ f.desc }}</p>
           <span class="feature-more">
             查看详情
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <path d="M5 12h14M13 6l6 6-6 6" />
             </svg>
           </span>
@@ -164,7 +179,14 @@
       <div class="footer-inner">
         <div class="brand">
           <span class="brand-mark">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <path d="M20 4c-8 0-14 3-14 9 0 4 3 7 7 7 6 0 7-5 7-16z" />
               <path d="M4 21c3-5 8-8 13-10" />
             </svg>
@@ -179,56 +201,57 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
+import { useRouter } from "vue-router";
+import WindowControls from "@renderer/components/WindowControls.vue";
 
-const router = useRouter()
+const router = useRouter();
 
 const goDetail = (feature?: string) => {
-  router.push({ path: '/about', query: feature ? { feature } : {} })
-}
+  router.push({ path: "/about", query: feature ? { feature } : {} });
+};
 
 const scrollToFeatures = () => {
-  document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
-}
+  document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
+};
 
 const features = [
   {
-    id: 'inspiration',
-    title: '方案灵感',
-    desc: '精选海量绿植搭配与空间设计方案，随时为你的灵感充电。',
-    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.7 1.3 1.4 1.5 2.5h5c.2-1.1.7-1.8 1.5-2.5A6 6 0 0 0 12 3z"/></svg>'
+    id: "inspiration",
+    title: "方案灵感",
+    desc: "精选海量绿植搭配与空间设计方案，随时为你的灵感充电。",
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.7 1.3 1.4 1.5 2.5h5c.2-1.1.7-1.8 1.5-2.5A6 6 0 0 0 12 3z"/></svg>',
   },
   {
-    id: 'space',
-    title: '空间绿植搭配',
-    desc: '家庭、室内、商业全空间适配，智能匹配最合适的绿植组合。',
-    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>'
+    id: "space",
+    title: "空间绿植搭配",
+    desc: "家庭、室内、商业全空间适配，智能匹配最合适的绿植组合。",
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>',
   },
   {
-    id: 'ai',
-    title: 'AI 智能设计',
-    desc: '输入空间需求，AI 一键生成专属绿植搭配与摆放方案。',
-    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/><path d="M5 3l.6 1.4L7 5l-1.4.6L5 7l-.6-1.4L3 5l1.4-.6z"/></svg>'
+    id: "ai",
+    title: "AI 智能设计",
+    desc: "输入空间需求，AI 一键生成专属绿植搭配与摆放方案。",
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/><path d="M5 3l.6 1.4L7 5l-1.4.6L5 7l-.6-1.4L3 5l1.4-.6z"/></svg>',
   },
   {
-    id: 'identify',
-    title: '植物识别',
-    desc: '拍照即识，秒速掌握植物名称、习性与养护要点。',
-    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4c-8 0-14 3-14 9 0 4 3 7 7 7 6 0 7-5 7-16z"/><path d="M4 21c3-5 8-8 13-10"/></svg>'
+    id: "identify",
+    title: "植物识别",
+    desc: "拍照即识，秒速掌握植物名称、习性与养护要点。",
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4c-8 0-14 3-14 9 0 4 3 7 7 7 6 0 7-5 7-16z"/><path d="M4 21c3-5 8-8 13-10"/></svg>',
   },
   {
-    id: 'care',
-    title: '养护管理',
-    desc: '浇水、施肥、光照智能提醒，让每一株植物被温柔照顾。',
-    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/><path d="M9.5 15a2.5 2.5 0 0 0 2.5 2.5"/></svg>'
+    id: "care",
+    title: "养护管理",
+    desc: "浇水、施肥、光照智能提醒，让每一株植物被温柔照顾。",
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/><path d="M9.5 15a2.5 2.5 0 0 0 2.5 2.5"/></svg>',
   },
   {
-    id: 'designer',
-    title: '设计师定制',
-    desc: '专业园艺设计师一对一服务，量身定制高端绿植方案。',
-    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>'
-  }
-]
+    id: "designer",
+    title: "设计师定制",
+    desc: "专业园艺设计师一对一服务，量身定制高端绿植方案。",
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',
+  },
+];
 </script>
 
 <style scoped>
@@ -247,6 +270,14 @@ const features = [
   background: rgba(255, 255, 255, 0.82);
   backdrop-filter: saturate(180%) blur(12px);
   border-bottom: 1px solid var(--fh-line);
+  /* 无边框窗口：整个导航栏作为拖拽区域 */
+  -webkit-app-region: drag;
+}
+/* 可交互元素禁止拖拽，保证点击生效 */
+.nav-links,
+.nav-cta,
+.nav-win-controls {
+  -webkit-app-region: no-drag;
 }
 .nav-inner {
   max-width: 1120px;
@@ -255,6 +286,20 @@ const features = [
   display: flex;
   align-items: center;
   gap: 40px;
+}
+/* 窗口控制按钮固定在窗口最右侧，脱离居中容器 */
+.nav-win-controls {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  z-index: 60;
+}
+/* 窄窗口时为右上角控制按钮预留空间，避免遮挡「立即体验」 */
+@media (max-width: 1280px) {
+  .nav-inner {
+    padding-right: 170px;
+  }
 }
 .brand {
   display: flex;
@@ -306,7 +351,9 @@ const features = [
   background: linear-gradient(135deg, var(--fh-primary), var(--fh-primary-deep));
   border-radius: 12px;
   font-weight: 600;
-  transition: transform 0.15s, box-shadow 0.2s;
+  transition:
+    transform 0.15s,
+    box-shadow 0.2s;
   box-shadow: 0 8px 20px rgba(46, 126, 72, 0.28);
 }
 .btn-primary:hover {
@@ -324,7 +371,9 @@ const features = [
   background: #fff;
   border-radius: 12px;
   font-weight: 600;
-  transition: border-color 0.2s, transform 0.15s;
+  transition:
+    border-color 0.2s,
+    transform 0.15s;
 }
 .btn-ghost:hover {
   border-color: var(--fh-primary);
@@ -640,7 +689,10 @@ const features = [
   border-radius: var(--fh-radius);
   padding: 30px 26px;
   cursor: pointer;
-  transition: transform 0.22s, box-shadow 0.22s, border-color 0.22s;
+  transition:
+    transform 0.22s,
+    box-shadow 0.22s,
+    border-color 0.22s;
 }
 .feature-card:hover {
   transform: translateY(-8px);

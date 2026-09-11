@@ -4,14 +4,28 @@
     <header class="nav">
       <div class="nav-inner">
         <button class="back" @click="goHome">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <path d="M19 12H5M11 18l-6-6 6-6" />
           </svg>
           返回首页
         </button>
         <div class="brand">
           <span class="brand-mark">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <path d="M20 4c-8 0-14 3-14 9 0 4 3 7 7 7 6 0 7-5 7-16z" />
               <path d="M4 21c3-5 8-8 13-10" />
             </svg>
@@ -101,7 +115,14 @@
       <div class="footer-inner">
         <div class="brand">
           <span class="brand-mark">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <path d="M20 4c-8 0-14 3-14 9 0 4 3 7 7 7 6 0 7-5 7-16z" />
               <path d="M4 21c3-5 8-8 13-10" />
             </svg>
@@ -115,67 +136,67 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
-const route = useRoute()
-const router = useRouter()
+const route = useRoute();
+const router = useRouter();
 
-const goHome = () => router.push({ path: '/' })
+const goHome = () => router.push({ path: "/home" });
 
 const features = [
   {
-    id: 'inspiration',
-    title: '方案灵感',
-    desc: '精选海量绿植搭配与空间设计方案，随时为你的灵感充电。',
-    extra: '覆盖北欧、日式、极简、新中式等多种风格，每日更新高质量实景案例，帮助你快速找到心仪的绿植布置灵感。',
-    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.7 1.3 1.4 1.5 2.5h5c.2-1.1.7-1.8 1.5-2.5A6 6 0 0 0 12 3z"/></svg>'
+    id: "inspiration",
+    title: "方案灵感",
+    desc: "精选海量绿植搭配与空间设计方案，随时为你的灵感充电。",
+    extra: "覆盖北欧、日式、极简、新中式等多种风格，每日更新高质量实景案例，帮助你快速找到心仪的绿植布置灵感。",
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.7 1.3 1.4 1.5 2.5h5c.2-1.1.7-1.8 1.5-2.5A6 6 0 0 0 12 3z"/></svg>',
   },
   {
-    id: 'space',
-    title: '空间绿植搭配',
-    desc: '家庭、室内、商业全空间适配，智能匹配最合适的绿植组合。',
-    extra: '根据空间尺寸、采光条件、装修风格与养护难度，智能推荐适配的绿植品类与摆放位置，让搭配科学又好看。',
-    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>'
+    id: "space",
+    title: "空间绿植搭配",
+    desc: "家庭、室内、商业全空间适配，智能匹配最合适的绿植组合。",
+    extra: "根据空间尺寸、采光条件、装修风格与养护难度，智能推荐适配的绿植品类与摆放位置，让搭配科学又好看。",
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>',
   },
   {
-    id: 'ai',
-    title: 'AI 智能设计',
-    desc: '输入空间需求，AI 一键生成专属绿植搭配与摆放方案。',
-    extra: '上传空间照片或输入需求描述，AI 即可生成可视化的绿植设计方案，并给出可落地的购买与摆放建议。',
-    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/><path d="M5 3l.6 1.4L7 5l-1.4.6L5 7l-.6-1.4L3 5l1.4-.6z"/></svg>'
+    id: "ai",
+    title: "AI 智能设计",
+    desc: "输入空间需求，AI 一键生成专属绿植搭配与摆放方案。",
+    extra: "上传空间照片或输入需求描述，AI 即可生成可视化的绿植设计方案，并给出可落地的购买与摆放建议。",
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/><path d="M5 3l.6 1.4L7 5l-1.4.6L5 7l-.6-1.4L3 5l1.4-.6z"/></svg>',
   },
   {
-    id: 'identify',
-    title: '植物识别',
-    desc: '拍照即识，秒速掌握植物名称、习性与养护要点。',
-    extra: '对准植物拍照，即刻识别品种、生长习性与养护要点，遇到不认识的绿植再也不必发愁。',
-    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4c-8 0-14 3-14 9 0 4 3 7 7 7 6 0 7-5 7-16z"/><path d="M4 21c3-5 8-8 13-10"/></svg>'
+    id: "identify",
+    title: "植物识别",
+    desc: "拍照即识，秒速掌握植物名称、习性与养护要点。",
+    extra: "对准植物拍照，即刻识别品种、生长习性与养护要点，遇到不认识的绿植再也不必发愁。",
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4c-8 0-14 3-14 9 0 4 3 7 7 7 6 0 7-5 7-16z"/><path d="M4 21c3-5 8-8 13-10"/></svg>',
   },
   {
-    id: 'care',
-    title: '养护管理',
-    desc: '浇水、施肥、光照智能提醒，让每一株植物被温柔照顾。',
-    extra: '为每株植物建立专属档案，智能推送浇水、施肥、换盆提醒，养护计划一目了然。',
-    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/><path d="M9.5 15a2.5 2.5 0 0 0 2.5 2.5"/></svg>'
+    id: "care",
+    title: "养护管理",
+    desc: "浇水、施肥、光照智能提醒，让每一株植物被温柔照顾。",
+    extra: "为每株植物建立专属档案，智能推送浇水、施肥、换盆提醒，养护计划一目了然。",
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/><path d="M9.5 15a2.5 2.5 0 0 0 2.5 2.5"/></svg>',
   },
   {
-    id: 'designer',
-    title: '设计师定制',
-    desc: '专业园艺设计师一对一服务，量身定制高端绿植方案。',
-    extra: '连接专业园艺设计师，提供一对一咨询与定制设计，为高端商业空间与居家需求打造专属绿意。',
-    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>'
-  }
-]
+    id: "designer",
+    title: "设计师定制",
+    desc: "专业园艺设计师一对一服务，量身定制高端绿植方案。",
+    extra: "连接专业园艺设计师，提供一对一咨询与定制设计，为高端商业空间与居家需求打造专属绿意。",
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',
+  },
+];
 
 const activeFeature = computed(() => {
-  const id = route.query.feature as string | undefined
-  return features.find((f) => f.id === id) || null
-})
+  const id = route.query.feature as string | undefined;
+  return features.find((f) => f.id === id) || null;
+});
 
 const selectFeature = (id: string) => {
-  router.push({ path: '/about', query: { feature: id } })
-}
+  router.push({ path: "/about", query: { feature: id } });
+};
 </script>
 
 <style scoped>
@@ -215,7 +236,9 @@ const selectFeature = (id: string) => {
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: color 0.2s, border-color 0.2s;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
 }
 .back svg {
   width: 16px;
@@ -425,7 +448,10 @@ const selectFeature = (id: string) => {
   border-radius: var(--fh-radius);
   padding: 26px;
   cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
 }
 .service-card:hover {
   transform: translateY(-4px);

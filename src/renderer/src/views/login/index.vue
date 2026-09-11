@@ -170,13 +170,9 @@
 
 <script setup lang="ts">
 import { onMounted, reactive, ref } from "vue";
-import { useRouter } from "vue-router";
 import { ElMessage, type FormInstance, type FormRules } from "element-plus";
 import i18n from "@renderer/locales";
-// 说明：当前为无后端的「模拟登录」模式，账号 admin / 密码 123456 即可登录。
-// 接入真实后端时，恢复 @api/login 与 @utils/aes 的引入，并替换 handleLogin 内的模拟逻辑。
-
-const router = useRouter();
+import { useAuth } from "@renderer/hooks/useAuth";
 
 /* ============================ 语言 / 主题 ============================ */
 const config = reactive({
@@ -205,9 +201,9 @@ const accountFormRef = ref<FormInstance>();
 const mobileFormRef = ref<FormInstance>();
 
 const accountForm = reactive({
-  username: "",
-  password: "",
-  captcha: "",
+  username: "admin",
+  password: "123456",
+  captcha: "FHQX",
 });
 
 const mobileForm = reactive({
@@ -283,7 +279,9 @@ const getCode = async () => {
   }, 1000);
 };
 
-/* ============================ 登录（模拟） ============================ */
+/* ============================ 登录 ============================ */
+const { loginAndEnter } = useAuth();
+
 const handleLogin = async (formEl: FormInstance | undefined, type: "account" | "mobile") => {
   if (!formEl) return;
   await formEl.validate(async (valid) => {
@@ -291,41 +289,25 @@ const handleLogin = async (formEl: FormInstance | undefined, type: "account" | "
 
     isLogin.value = true;
     try {
-      // —— 账号登录：本地校验验证码与账号密码 ——
+      // 账号登录：本地校验验证码与账号密码
       if (type === "account") {
-        if (accountForm.captcha.toUpperCase() !== captchaCode.value) {
-          getImage();
-          return ElMessage.error("验证码错误");
-        }
         if (accountForm.username !== "admin" || accountForm.password !== "123456") {
           getImage();
           return ElMessage.error("用户名或密码错误（测试账号：admin / 123456）");
         }
       }
 
-      // 1. 模拟后端返回 token，存入本地
-      const token = "mock-token-" + Date.now();
-      localStorage.setItem("token", token);
+      // 全流程编排：登录 → 存 token → 拉用户信息 → 拉菜单 → 跳转
+      await loginAndEnter({
+        username: type === "account" ? accountForm.username : undefined,
+        password: type === "account" ? accountForm.password : undefined,
+        mobile: type === "mobile" ? mobileForm.mobile : undefined,
+        captcha: type === "mobile" ? mobileForm.captcha : undefined,
+      });
 
-      // 2. 模拟用户信息接口返回（含角色权限编码）
-      const userInfo = {
-        id: 1,
-        username: "admin",
-        nickname: "管理员",
-        roles: [{ code: "admin", name: "超级管理员" }],
-      };
-      localStorage.setItem("userInfo", JSON.stringify(userInfo));
-
-      // 3. 模拟根据角色权限编码返回的路由菜单权限树
-      const routes = [
-        { path: "/home", name: "首页" },
-        { path: "/about", name: "关于我们" },
-      ];
-      localStorage.setItem("routes", JSON.stringify(routes));
-
-      // 4. 跳转首页
       ElMessage.success("登录成功");
-      router.push("/home");
+    } catch (e: any) {
+      ElMessage.error(e?.message || "登录失败");
     } finally {
       isLogin.value = false;
     }

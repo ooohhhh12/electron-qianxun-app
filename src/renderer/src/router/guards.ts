@@ -1,10 +1,16 @@
-//前置
-export const beforeEach = ()=>{
-    console.log('前置');
-    return true;
-}
+// 白名单（无需登录即可访问）
+const WHITE_LIST = ["/", "/home", "/about", "/scenes", "/login/wechat"];
 
-//后置
-export const afterEach = ()=>{
-    console.log('后置');
-}
+// 前置守卫：未登录不可进入后台
+export const beforeEach = (to: { path: string }) => {
+  const token = localStorage.getItem("token");
+  if (to.path.startsWith("/main") && !token) {
+    return "/";
+  }
+  return true;
+};
+
+// 后置守卫
+export const afterEach = () => {
+  // 预留：埋点、标题更新等
+};
