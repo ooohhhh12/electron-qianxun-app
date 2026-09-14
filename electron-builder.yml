@@ -1,5 +1,5 @@
 appId: com.electron.app
-productName: electron-app
+productName: 风禾千寻
 directories:
   buildResources: build
 files:
