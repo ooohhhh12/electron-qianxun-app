@@ -2,6 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from "electron";
 import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
+import { registerDemoIpc } from "./ipc/demo";
 
 // app.commandLine.appendSwitch("high-dpi-support", "true");
 app.commandLine.appendSwitch("force-device-scale-factor", "1"); // 同步缩放比例
@@ -202,6 +203,10 @@ app.whenReady().then(() => {
   });
 
   createWindow();
+
+  // 注册系统交互 Demo 的 IPC：必须在 createWindow 之后，
+  // demo.ts 内部会跳过 win-minimize 等已注册通道，避免重复注册
+  registerDemoIpc();
 
   app.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the

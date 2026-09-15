@@ -23,6 +23,7 @@
           <router-link to="/main/dashboard">核心功能</router-link>
           <router-link to="/scenes">空间场景</router-link>
           <router-link to="/about">关于我们</router-link>
+          <router-link to="/demo">演示</router-link>
         </nav>
         <button class="btn-primary nav-cta" @click="goDetail()">立即体验</button>
       </div>

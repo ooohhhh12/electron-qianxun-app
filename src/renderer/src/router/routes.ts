@@ -24,6 +24,12 @@ export const AppRoutes = [
     name: "微信登录",
     component: () => import("@views/login/wechat.vue"),
   },
+  // Electron 系统交互 Demo（仅供开发参考，不影响正式功能）
+  {
+    path: "/demo",
+    name: "系统交互Demo",
+    component: () => import("@views/demo/index.vue"),
+  },
   // 后台管理（嵌套路由）
   {
     path: "/main",
