@@ -97,16 +97,16 @@ export function registerDemoIpc(): void {
    *          新手引导固定窗口尺寸、防止误拖动、透明悬浮球等。
    * 注意：除特别说明外都作用于「发起调用的那个窗口」，多窗口安全。
    * ================================================================ */
-  safeHandle("win-minimize", (e) => getWin(e)?.minimize());
+  // safeHandle("win-minimize", (e) => getWin(e)?.minimize());
   safeHandle("win-restore", (e) => getWin(e)?.restore());
-  safeHandle("win-toggle-max", (e) => {
-    const win = getWin(e);
-    if (!win) return false;
-    if (win.isMaximized()) win.unmaximize();
-    else win.maximize();
-    return win.isMaximized();
-  });
-  safeHandle("win-close", (e) => getWin(e)?.close());
+  // safeHandle("win-toggle-max", (e) => {
+  //   const win = getWin(e);
+  //   if (!win) return false;
+  //   if (win.isMaximized()) win.unmaximize();
+  //   else win.maximize();
+  //   return win.isMaximized();
+  // });
+  // safeHandle("win-close", (e) => getWin(e)?.close());
   // 隐藏 ≠ 关闭：窗口从任务栏消失但进程保留，配合托盘可再唤起
   safeHandle("win-hide", (e) => getWin(e)?.hide());
   // 隐藏后的唤起入口：托盘 Demo 或这里都可显示
@@ -117,7 +117,7 @@ export function registerDemoIpc(): void {
   });
   // 闪烁任务栏/抢焦点场景：消息到达但用户在别的窗口时主动唤起
   safeHandle("win-focus", (e) => getWin(e)?.focus());
-  safeHandle("win-is-maximized", (e) => getWin(e)?.isMaximized());
+  // safeHandle("win-is-maximized", (e) => getWin(e)?.isMaximized());
   safeHandle("win-is-focused", (e) => getWin(e)?.isFocused());
   // 置顶：悬浮时钟、客服小窗；再次调用 false 取消
   safeHandle("win-set-always-on-top", (e, flag: boolean) => getWin(e)?.setAlwaysOnTop(!!flag));
